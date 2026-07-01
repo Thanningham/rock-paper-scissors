@@ -2,6 +2,14 @@ let computerScore = 0;
 let humanScore = 0;
 const choices = ["rock", "paper", "scissors"];
 const WINNINGSCORE = 5;
+const humanScoreDisplay = document.querySelector("#human-score");
+const computerScoreDisplay = document.querySelector("#computer-score");
+const roundWinnerTextDisplay = document.querySelector("#round-winner-text-display")
+const buttons = document.querySelectorAll(".choices");
+const computerChoiceTextDisplay= document.querySelector("#computer-choice-text-display");
+const gameWinnerTextDisplay = document.querySelector("#game-winner-text-display");
+const playAgainButton = document.querySelector("#play-again");
+let gameOver = false;
 
 
 function getComputerChoice() {
@@ -13,24 +21,27 @@ function getRandomInt(max) {
 }
 
 function playRound(humanChoice, computerChoice) {
-
+    if (gameOver) {
+        return;
+    }
+    computerChoiceTextDisplay.textContent = `Computer picked: ${computerChoice}`
+    humanChoice = humanChoice.toLowerCase()
     const humanWins = ((humanChoice === "rock" && computerChoice === "scissors") ||
         (humanChoice === "paper" && computerChoice === "rock") ||
         (humanChoice === "scissors" && computerChoice === "paper"))
 
     if (humanChoice === computerChoice) {
-        winnerAnnouncement.textContent = "It's a tie!";
+        roundWinnerTextDisplay.textContent = "It's a tie!";
         return;
     }
 
     if (humanWins) {
-        winnerAnnouncement.textContent = `You win, ${humanChoice} beats ${computerChoice}!`;
+        roundWinnerTextDisplay.textContent = `You win, ${humanChoice} beats ${computerChoice}!`;
         humanScore++;
     } else {
-        winnerAnnouncement.textContent = `You lose, ${computerChoice} beats ${humanChoice}`;
+        roundWinnerTextDisplay.textContent = `You lose, ${computerChoice} beats ${humanChoice}`;
         computerScore++;
     }
-
     updateScoreDisplay();
     checkWinner();
 }
@@ -38,43 +49,46 @@ function playRound(humanChoice, computerChoice) {
 function checkWinner() {
     if (humanScore < WINNINGSCORE && computerScore < WINNINGSCORE) {
         return;
-    } 
-    winnerAnnouncement.textContent = 
-    resetGame();
+    }
+
+    if (humanScore >= WINNINGSCORE) {
+        gameWinnerTextDisplay.textContent = `You win!`
+    } else {
+        gameWinnerTextDisplay.textContent = `Computer wins!`
+    }
+    gameOver = true;
+    playAgainButton.hidden = false;
+    playAgainButton.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    })
 }
 
-function createButtons() {
-    const buttonSection = document.createElement("div");
-    choices.forEach(choice => {
-        const button = document.createElement("button");
-        button.textContent = choice;
-        button.addEventListener("click", () => playRound(choice, getComputerChoice()));
-        buttonSection.appendChild(button);
+function initializeButtons() {
+    buttons.forEach(button => {
+        button.addEventListener("click", () => playRound(button.dataset.choice, getComputerChoice()));
     })
-    document.body.appendChild(buttonSection);
+    playAgainButton.addEventListener("click", resetGame)
 }
 
 function updateScoreDisplay() {
-    computerScoreDisplay.textContent =`Computer Score: ${computerScore}`;
-    humanScoreDisplay.textContent = `Your Score: ${humanScore}`;
+    computerScoreDisplay.textContent = `${computerScore}`;
+    humanScoreDisplay.textContent = `${humanScore}`;
 }
 
 function resetGame() {
     humanScore = 0;
     computerScore = 0;
+    gameWinnerTextDisplay.textContent = "";
+    computerChoiceTextDisplay.textContent = "";
+    roundWinnerTextDisplay.textContent = "";
+    gameOver = false;
+    playAgainButton.hidden = true;
     updateScoreDisplay ();
 }
 
-const resultDisplay = document.createElement("div");
-const humanScoreDisplay = document.createElement("p");
-const computerScoreDisplay = document.createElement("p");
-const winnerAnnouncement = document.createElement("p");
 
-createButtons();
-resultDisplay.appendChild(computerScoreDisplay);
-resultDisplay.appendChild(humanScoreDisplay);
-resultDisplay.appendChild(winnerAnnouncement);
-document.body.appendChild(resultDisplay);
+initializeButtons();
 updateScoreDisplay();
 
 
