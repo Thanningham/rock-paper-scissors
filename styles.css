@@ -102,6 +102,19 @@ h1{
     align-items: center
 }
 
+#computer-choice-text-display {
+    font-size: 18px;
+}
+
+#round-winner-text-display {
+    font-size: 18px;
+    color: #374151;
+}
+
+#game-winner-text-display {
+    font-size: 32px;
+}
+
 .footer {
     margin-bottom: 16px;
 }

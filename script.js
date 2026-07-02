@@ -13,18 +13,25 @@ let gameOver = false;
 
 
 function getComputerChoice() {
+    
     return choices[getRandomInt(choices.length)];
+
 }
 
 function getRandomInt(max) {
+
     return Math.floor(Math.random() * max);
+
 }
 
 function playRound(humanChoice, computerChoice) {
+    
     if (gameOver) {
         return;
     }
+
     computerChoiceTextDisplay.textContent = `Computer picked: ${computerChoice}`
+
     humanChoice = humanChoice.toLowerCase()
     const humanWins = ((humanChoice === "rock" && computerChoice === "scissors") ||
         (humanChoice === "paper" && computerChoice === "rock") ||
@@ -42,20 +49,23 @@ function playRound(humanChoice, computerChoice) {
         roundWinnerTextDisplay.textContent = `You lose, ${computerChoice} beats ${humanChoice}`;
         computerScore++;
     }
+    
     updateScoreDisplay();
     checkWinner();
 }
 
 function checkWinner() {
+
     if (humanScore < WINNINGSCORE && computerScore < WINNINGSCORE) {
         return;
     }
 
     if (humanScore >= WINNINGSCORE) {
-        gameWinnerTextDisplay.textContent = `You win!`
+        gameWinnerTextDisplay.textContent = `You win the game!`
     } else {
-        gameWinnerTextDisplay.textContent = `Computer wins!`
+        gameWinnerTextDisplay.textContent = `Computer wins the game!`
     }
+
     gameOver = true;
     playAgainButton.hidden = false;
     playAgainButton.scrollIntoView({
@@ -65,18 +75,23 @@ function checkWinner() {
 }
 
 function initializeButtons() {
+
     buttons.forEach(button => {
         button.addEventListener("click", () => playRound(button.dataset.choice, getComputerChoice()));
     })
     playAgainButton.addEventListener("click", resetGame)
+
 }
 
 function updateScoreDisplay() {
+
     computerScoreDisplay.textContent = `${computerScore}`;
     humanScoreDisplay.textContent = `${humanScore}`;
+
 }
 
 function resetGame() {
+
     humanScore = 0;
     computerScore = 0;
     gameWinnerTextDisplay.textContent = "";
@@ -85,6 +100,7 @@ function resetGame() {
     gameOver = false;
     playAgainButton.hidden = true;
     updateScoreDisplay ();
+
 }
 
 
